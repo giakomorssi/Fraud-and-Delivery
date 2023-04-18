@@ -25,7 +25,8 @@ def prediction_100(model_name):
   # Load the specified model using pickle
   with open(f'/content/drive/MyDrive/University/Deloitte/models_lr/{model_name}.pkl', 'rb') as f:
       model = pickle.load(f)
-
+      
+  print('\n', model)
   for i in range(1, 21):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True)
 
@@ -129,7 +130,7 @@ def fraud_detection(model_name):
     regular_recall = [] 
     low = []
     avg_conf_matrix = np.zeros((3, 3))
-    print(model)
+    print('\n', model)
 
     for i in range(1, 51):
 
