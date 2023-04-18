@@ -1,5 +1,5 @@
 # Test the model
-def prediction_100(model_name):
+def prediction(model_name):
   from google.colab import drive
   drive.mount('/content/drive')
   from sklearn.metrics import mean_squared_error
