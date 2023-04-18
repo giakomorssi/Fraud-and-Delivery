@@ -1,5 +1,5 @@
 # Test the model
-def prediction(model_name):
+def prediction_100(model_name):
   import logging
   logging.getLogger('google.colab.drive').setLevel(logging.CRITICAL)
   from google.colab import drive
