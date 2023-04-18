@@ -95,7 +95,7 @@ def prediction_100(model_name):
 
     within_threshold_mean.append(sum(abs(y_pred - y_test) <= threshold) / len(y_pred))
 
-  print(f'MSE Mean: {np.mean(mse)}')
+  print(f'\nMSE Mean: {np.mean(mse)}')
   print(f'MSE Std: {np.std(mse)}')
   print(f'Within Threshold Mean: {np.mean(within_threshold_mean)}')
   print(f'Within Threshold Std: {np.std(within_threshold_mean)}')
