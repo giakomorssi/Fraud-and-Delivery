@@ -4,7 +4,7 @@ def prediction_100(model_name):
   drive.mount('/content/drive')
   from sklearn.metrics import mean_squared_error
   import pandas as pd
-  !pip install -q category_encoders
+  pip install -q category_encoders
   from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
   from sklearn.model_selection import train_test_split
   from sklearn.decomposition import PCA
