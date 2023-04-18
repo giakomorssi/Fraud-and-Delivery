@@ -1,5 +1,7 @@
 # Test the model
 def prediction(model_name):
+  import logging
+  logging.getLogger('google.colab.drive').setLevel(logging.CRITICAL)
   from google.colab import drive
   drive.mount('/content/drive')
   from sklearn.metrics import mean_squared_error
