@@ -113,7 +113,7 @@ def fraud_detection(model_name):
     from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 
 
-    with open(f'/content/drive/MyDrive/University/Deloitte/models_lr/{model_name}.pkl', 'rb') as f:
+    with open(f'/content/drive/MyDrive/University/Deloitte/model_fraud/{model_name}.pkl', 'rb') as f:
         model = pickle.load(f)
 
     df = pd.read_csv('/content/drive/MyDrive/University/Deloitte/df_fraud.csv')
