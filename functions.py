@@ -132,7 +132,7 @@ def fraud_detection(model_name):
     avg_conf_matrix = np.zeros((3, 3))
     print('\n', model)
 
-    for i in range(1, 51):
+    for i in range(1, 31):
 
       X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, shuffle=True)
 
