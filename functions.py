@@ -112,7 +112,6 @@ def fraud_detection(model_name):
     from category_encoders import LeaveOneOutEncoder
     from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 
-
     with open(f'/content/drive/MyDrive/University/Deloitte/model_fraud/{model_name}.pkl', 'rb') as f:
         model = pickle.load(f)
 
