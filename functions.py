@@ -100,7 +100,7 @@ def prediction_100(model_name):
   print(f'Within Threshold Mean: {np.mean(within_threshold_mean)}')
   print(f'Within Threshold Std: {np.std(within_threshold_mean)}')
 
- def fraud_detection(model_name):
+def fraud_detection(model_name):
     from sklearn.preprocessing import StandardScaler
     from sklearn.model_selection import train_test_split
     from sklearn.decomposition import PCA
