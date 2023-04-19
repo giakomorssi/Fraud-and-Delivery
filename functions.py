@@ -13,7 +13,11 @@ def prediction_h5(model_name = 'nn1.h5', threshold = 0.5):
   import numpy as np
   from category_encoders import LeaveOneOutEncoder
   from keras.models import load_model
-
+  from matplotlib import pyplot as plt
+  import seaborn as sns
+  from statsmodels.graphics.gofplots import qqplot
+  
+  
   within_threshold_mean = []
   mse_v = []
   loss_v = []
@@ -25,7 +29,7 @@ def prediction_h5(model_name = 'nn1.h5', threshold = 0.5):
   model = load_model(f'/content/drive/MyDrive/University/Deloitte/models_lr/{model_name}')
 
   print('\nModel: \n', model.summary(), '\n')
-  for i in range(1, 11):
+  for i in range(1, 6):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True)
 
     # initialize the encoder
@@ -145,6 +149,7 @@ def prediction_h5(model_name = 'nn1.h5', threshold = 0.5):
   print('\n')
 
   # QQ plot
+  from statsmodels.graphics.gofplots import qqplot
   qqplot(residuals, line='s')
   plt.title('QQ Plot of Residuals')
   plt.xlabel('Theoretical Quantiles')
@@ -166,6 +171,9 @@ def prediction_pkl(model_name = 'rf.pkl', threshold = 0.5):
   import numpy as np
   from category_encoders import LeaveOneOutEncoder
   from keras.models import load_model
+  from statsmodels.graphics.gofplots import qqplot
+  from matplotlib import pyplot as plt
+  import seaborn as sns
 
   within_threshold_mean = []
   mse_v = []
