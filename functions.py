@@ -110,6 +110,8 @@ def prediction_h5(model_name = 'nn1.h5', threshold = 0.5):
   
   y_test = np.ravel(y_test)
   y_pred = np.ravel(y_pred)
+  
+  residuals = y_test - y_pred
 
   # Initialize a dictionary to store the squared errors and average predictions for each class
   mse_dict = {label: {'errors': [], 'preds': []} for label in np.unique(y_test)}
