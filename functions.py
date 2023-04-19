@@ -25,7 +25,7 @@ def prediction_100(model_name='rf', threshold= 0.5):
   with open(f'/content/drive/MyDrive/University/Deloitte/models_lr/{model_name}.pkl', 'rb') as f:
       model = pickle.load(f)
       
-  print('\nModel: ', model_name, '\n')
+  print('\nModel: \n', model, '\n')
   for i in range(1, 21):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True)
 
@@ -129,7 +129,7 @@ def fraud_detection(model_name='rf', iteration=10):
     regular_recall = [] 
     low = []
     avg_conf_matrix = np.zeros((3, 3))
-    print('\nModel: ', model_name, '\n')
+    print('\nModel: \n', model, '\n')
 
     for i in range(1, (iteration + 1)):
 
@@ -270,6 +270,8 @@ def visual_prediction(model_name = 'rf', threshold = 0.5):
 
   with open(f'/content/drive/MyDrive/University/Deloitte/models_lr/{model_name}.pkl', 'rb') as f:
     model = pickle.load(f)
+    
+   print(f'\nModel: \n{model} \n')
 
   df = pd.read_csv('/content/drive/MyDrive/University/Deloitte/df_lr.csv')
   X = df.drop(['Days for shipping (real)', 'Product Name'], axis = 1)
