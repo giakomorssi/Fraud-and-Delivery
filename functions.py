@@ -261,11 +261,32 @@ def prediction_pkl(model_name = 'rf.pkl', threshold = 0.5):
   print(f'rMSE Std: {np.std(np.sqrt(mse))}')
   print(f'Within Threshold Mean: {np.mean(within_threshold_mean)}')
   print(f'Within Threshold Std: {np.std(within_threshold_mean)}\n')
+
+  # Initialize a dictionary to store the squared errors and average predictions for each class
+  mse_dict = {label: {'errors': [], 'preds': []} for label in np.unique(y_test)}
+
+  # Calculate the squared error and average prediction for each instance and add them to the corresponding class lists
+  for true_label, pred_label, error in zip(y_test, y_pred, (y_test - y_pred) ** 2):
+      mse_dict[true_label]['errors'].append(error)
+      mse_dict[true_label]['preds'].append(pred_label)
+
+  # Calculate the mean squared error and average prediction for each class and print the results
+  for label in mse_dict:
+      instances = len(mse_dict[label]['errors'])
+      if instances > 0:
+          mse = np.mean(mse_dict[label]['errors'])
+          rmse = np.sqrt(mse)
+          avg_pred = np.mean(mse_dict[label]['preds'])
+          print(f'Class {label}: {instances} instances, RMSE = {rmse:.6f}, Average Predicted Value = {avg_pred:.6f}')
+      else:
+          print(f'Class {label}: no instances in the test set')
+
+  print('\n')
   
   residuals = y_test - y_pred
 
   # Distribution plot
-  fig, ax = plt.subplots(figsize=(10, 6))
+  fig, ax = plt.subplots(figsize=(6, 4))
   sns.set_palette('colorblind')
   sns.set_style('darkgrid')
   sns.kdeplot(y_test, label='Actual', fill=True)
@@ -279,7 +300,7 @@ def prediction_pkl(model_name = 'rf.pkl', threshold = 0.5):
 
   # Plot a histogram of the residuals
   sns.set_style('darkgrid')
-  fig, ax = plt.subplots(figsize=(10, 6))
+  fig, ax = plt.subplots(figsize=(6, 4))
   sns.histplot(residuals, bins=100, color='green', kde=True, ax=ax)
   ax.set_xlabel('Residuals')
   ax.set_ylabel('Frequency')
