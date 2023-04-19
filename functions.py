@@ -1,5 +1,5 @@
 # Test the model
-def prediction_100(model_name='rf', threshold= 0.5):
+def prediction_100(model_name='best_nn_p_05.h5', threshold= 0.5):
   from google.colab import drive
   drive.mount('/content/drive')
   from sklearn.metrics import mean_squared_error
@@ -13,6 +13,7 @@ def prediction_100(model_name='rf', threshold= 0.5):
   import pandas as pd
   import numpy as np
   from category_encoders import LeaveOneOutEncoder
+  from keras.models import load_model
 
   within_threshold_mean = []
   mse = []
@@ -20,11 +21,14 @@ def prediction_100(model_name='rf', threshold= 0.5):
   df = pd.read_csv('/content/drive/MyDrive/University/Deloitte/df_lr.csv')
   X = df.drop(['Days for shipping (real)', 'Product Name'], axis = 1)
   y = df['Days for shipping (real)']
+  
+  try:
+    with open(f'/content/drive/MyDrive/University/Deloitte/models_lr/{model_name}', 'rb') as f:
+       model = pickle.load(f)  
 
-  # Load the specified model using pickle
-  with open(f'/content/drive/MyDrive/University/Deloitte/models_lr/{model_name}.pkl', 'rb') as f:
-      model = pickle.load(f)
-      
+  except:
+    model = load_model(f'/content/drive/MyDrive/University/Deloitte/models_lr/{model_name}')
+
   print('\nModel: \n', model, '\n')
   for i in range(1, 21):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True)
@@ -100,7 +104,7 @@ def prediction_100(model_name='rf', threshold= 0.5):
   print(f'Within Threshold Mean: {np.mean(within_threshold_mean)}')
   print(f'Within Threshold Std: {np.std(within_threshold_mean)}')
 
-def fraud_detection(model_name='rf', iteration=10):
+def fraud_detection(model_name='rf.pkl', iteration=10):
     from sklearn.preprocessing import StandardScaler
     from sklearn.model_selection import train_test_split
     from sklearn.decomposition import PCA
@@ -112,7 +116,7 @@ def fraud_detection(model_name='rf', iteration=10):
     from category_encoders import LeaveOneOutEncoder
     from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 
-    with open(f'/content/drive/MyDrive/University/Deloitte/model_fraud/{model_name}.pkl', 'rb') as f:
+    with open(f'/content/drive/MyDrive/University/Deloitte/model_fraud/{model_name}', 'rb') as f:
         model = pickle.load(f)
 
     df = pd.read_csv('/content/drive/MyDrive/University/Deloitte/df_fraud.csv')
