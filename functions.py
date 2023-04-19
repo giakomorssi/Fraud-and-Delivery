@@ -275,7 +275,7 @@ def visual_prediction(model_name = 'rf.pkl', threshold = 0.5):
   with open(f'/content/drive/MyDrive/University/Deloitte/models_lr/{model_name}', 'rb') as f:
     model = pickle.load(f)
     
-   print(f'\nModel: \n{model} \n')
+  print(f'\nModel: \n{model} \n')
 
   df = pd.read_csv('/content/drive/MyDrive/University/Deloitte/df_lr.csv')
   X = df.drop(['Days for shipping (real)', 'Product Name'], axis = 1)
