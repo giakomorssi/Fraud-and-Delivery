@@ -354,6 +354,8 @@ def prediction_pkl(model_name = 'rf.pkl', threshold = 0.5):
   plt.show()
 
 def fraud_detection(model_name='rf.pkl', iteration=10):
+    from google.colab import drive
+    drive.mount('/content/drive')
     from sklearn.preprocessing import StandardScaler
     from sklearn.model_selection import train_test_split
     from sklearn.decomposition import PCA
