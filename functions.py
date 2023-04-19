@@ -1,5 +1,5 @@
 # Test the model
-def prediction_100(model_name='rf'):
+def prediction_100(model_name='rf', threshold= 0.5):
   from google.colab import drive
   drive.mount('/content/drive')
   from sklearn.metrics import mean_squared_error
@@ -15,7 +15,6 @@ def prediction_100(model_name='rf'):
   from category_encoders import LeaveOneOutEncoder
 
   within_threshold_mean = []
-  threshold = 0.5
   mse = []
 
   df = pd.read_csv('/content/drive/MyDrive/University/Deloitte/df_lr.csv')
@@ -101,7 +100,7 @@ def prediction_100(model_name='rf'):
   print(f'Within Threshold Mean: {np.mean(within_threshold_mean)}')
   print(f'Within Threshold Std: {np.std(within_threshold_mean)}')
 
-def fraud_detection(model_name='rf'):
+def fraud_detection(model_name='rf', iteration=10):
     from sklearn.preprocessing import StandardScaler
     from sklearn.model_selection import train_test_split
     from sklearn.decomposition import PCA
@@ -132,7 +131,7 @@ def fraud_detection(model_name='rf'):
     avg_conf_matrix = np.zeros((3, 3))
     print('\nModel: ', model_name, '\n')
 
-    for i in range(1, 31):
+    for i in range(1, (iteration + 1)):
 
       X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, shuffle=True)
 
@@ -239,10 +238,6 @@ def fraud_detection(model_name='rf'):
 
       if i % 10 == 0:
           print(f'Iteration: {i}')
-          print(f'Fraud Recall {round(np.average(fraud_recall), 4)}, {round(np.std(fraud_recall), 4)}')
-          print(f'Suspected Recall {round(np.average(suspected_recall), 4)}, {round(np.std(suspected_recall), 4)}')
-          print(f'Regular Recall {round(np.average(regular_recall), 4)}, {round(np.std(regular_recall), 4)}')
-          print(f'Total Recall {round(np.average(recall_scores), 4)}, {round(np.std(recall_scores), 4)} \n')
 
       if recall_score(y_test, y_pred, average=None)[0] < 0.7:
         low.append(round(recall_score(y_test, y_pred, average=None)[0], 4))
@@ -250,7 +245,7 @@ def fraud_detection(model_name='rf'):
     print(f'\n Fraud Recall: {round(np.average(fraud_recall), 4)}, std: {round(np.std(fraud_recall), 4)}, Under 0.7: {len(low)}, {low}\n Suspected Recall: {round(np.average(suspected_recall), 4)}, std: {round(np.std(suspected_recall), 4)}\n Regular Recall: {round(np.average(regular_recall), 4)}, std: {round(np.std(regular_recall), 4)}\n Total: {round(np.average(recall_scores), 4)}, std: {round(np.std(recall_scores), 4)}')
 
     np.set_printoptions(precision=4)
-    avg_conf_matrix /= 50
+    avg_conf_matrix /= iteration
     print('Precisions', precision_score(y_test, y_pred, average=None))
     print("\n Average Confusion Matrix:")
     print(avg_conf_matrix)
