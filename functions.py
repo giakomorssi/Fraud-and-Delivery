@@ -1,5 +1,5 @@
 # Test the model
-def prediction_100(model_name = 'best_nn_p_05.h5', threshold = 0.5):
+def prediction_100(model_name = 'nn1.h5', threshold = 0.5):
   from google.colab import drive
   drive.mount('/content/drive')
   from sklearn.metrics import mean_squared_error
