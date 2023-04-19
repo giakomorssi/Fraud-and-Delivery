@@ -188,7 +188,7 @@ def prediction_pkl(model_name = 'rf.pkl', threshold = 0.5):
     
   print(f'\nModel: \n{model} \n')
 
-  for i in range(1, 11):
+  for i in range(1, 6):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True)
 
     # initialize the encoder
