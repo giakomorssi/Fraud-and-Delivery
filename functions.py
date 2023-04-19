@@ -1,5 +1,5 @@
 # Test the model
-def prediction_100(model_name='best_nn_p_05.h5', threshold= 0.5):
+def prediction_100(model_name = 'best_nn_p_05.h5', threshold = 0.5):
   from google.colab import drive
   drive.mount('/content/drive')
   from sklearn.metrics import mean_squared_error
@@ -16,21 +16,17 @@ def prediction_100(model_name='best_nn_p_05.h5', threshold= 0.5):
   from keras.models import load_model
 
   within_threshold_mean = []
-  mse = []
+  mse_v = []
+  loss_v = []
 
   df = pd.read_csv('/content/drive/MyDrive/University/Deloitte/df_lr.csv')
   X = df.drop(['Days for shipping (real)', 'Product Name'], axis = 1)
   y = df['Days for shipping (real)']
-  
-  try:
-    with open(f'/content/drive/MyDrive/University/Deloitte/models_lr/{model_name}', 'rb') as f:
-       model = pickle.load(f)  
 
-  except:
-    model = load_model(f'/content/drive/MyDrive/University/Deloitte/models_lr/{model_name}')
+  model = load_model(f'/content/drive/MyDrive/University/Deloitte/models_lr/{model_name}')
 
-  print('\nModel: \n', model, '\n')
-  for i in range(1, 21):
+  print('\nModel: \n', model.summary(), '\n')
+  for i in range(1, 11):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True)
 
     # initialize the encoder
@@ -79,8 +75,8 @@ def prediction_100(model_name='best_nn_p_05.h5', threshold= 0.5):
 
     scaler = StandardScaler()
 
-    X_train.loc[:, X_train.columns[82:]] = scaler.fit_transform(X_train.loc[:, X_train.columns[82:]])
-    X_test.loc[:, X_test.columns[82:]] = scaler.transform(X_test.loc[:, X_test.columns[82:]])
+    X_train[X_train.columns[82:]] = scaler.fit_transform(X_train[X_train.columns[82:]])
+    X_test[X_test.columns[82:]] = scaler.transform(X_test[X_test.columns[82:]])
 
     # Split the dataset into features and target
     X_train = pd.DataFrame(X_train)
@@ -91,16 +87,21 @@ def prediction_100(model_name='best_nn_p_05.h5', threshold= 0.5):
     X_train.columns = X_train.columns.astype(str)
     X_test.columns = X_test.columns.astype(str)
 
-    y_pred = model.predict(X_test)
-      
-    mse.append(mean_squared_error(y_test, y_pred))
+    loss, mse = model.evaluate(X_test, y_test, verbose=1)
+
+    mse_v.append(mse)
+    loss_v.append(loss)
+
+    y_pred = model.predict(X_test, verbose=1)
 
     # Calculate the percentage of predictions within the threshold value
 
-    within_threshold_mean.append(sum(abs(y_pred - y_test) <= threshold) / len(y_pred))
+    within_threshold_mean.append(sum(abs(y_pred.ravel() - y_test.ravel()) <= threshold) / len(y_pred))
 
-  print(f'\nMSE Mean: {np.mean(mse)}')
-  print(f'MSE Std: {np.std(mse)}')
+  print(f'\nMSE Mean: {np.mean(mse_v)}')
+  print(f'MSE Std: {np.std(mse_v)}')
+  print(f'Loss Mean: {np.mean(loss_v)}')
+  print(f'Loss Std: {np.std(loss_v)}')
   print(f'Within Threshold Mean: {np.mean(within_threshold_mean)}')
   print(f'Within Threshold Std: {np.std(within_threshold_mean)}')
 
