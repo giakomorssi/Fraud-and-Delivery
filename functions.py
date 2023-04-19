@@ -254,7 +254,7 @@ def fraud_detection(model_name='rf.pkl', iteration=10):
     print("\n Average Confusion Matrix:")
     print(avg_conf_matrix)
 
-def visual_prediction(model_name = 'rf', threshold = 0.5):
+def visual_prediction(model_name = 'rf.pkl', threshold = 0.5):
   import seaborn as sns
   import matplotlib.pyplot as plt
   import statsmodels.api as sm
@@ -272,7 +272,7 @@ def visual_prediction(model_name = 'rf', threshold = 0.5):
   import numpy as np
   from category_encoders import LeaveOneOutEncoder
 
-  with open(f'/content/drive/MyDrive/University/Deloitte/models_lr/{model_name}.pkl', 'rb') as f:
+  with open(f'/content/drive/MyDrive/University/Deloitte/models_lr/{model_name}', 'rb') as f:
     model = pickle.load(f)
     
    print(f'\nModel: \n{model} \n')
