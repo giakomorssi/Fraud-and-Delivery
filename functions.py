@@ -250,7 +250,7 @@ def fraud_detection(model_name='rf', iteration=10):
     print("\n Average Confusion Matrix:")
     print(avg_conf_matrix)
 
-def visual_prediction(model_name = 'rf'):
+def visual_prediction(model_name = 'rf', threshold = 0.5):
   import seaborn as sns
   import matplotlib.pyplot as plt
   import statsmodels.api as sm
@@ -367,8 +367,7 @@ def visual_prediction(model_name = 'rf'):
   plt.show()
   print('\n')
 
-  # Plot the percentage of predictions within 0.5 days
-  threshold = 0.5
+  # Plot the percentage of predictions within threshold days
   y_pred = model.predict(X_test)
   within_threshold = (np.abs(y_pred - y_test) < threshold).mean()
   outside_threshold = 1 - within_threshold
@@ -377,7 +376,7 @@ def visual_prediction(model_name = 'rf'):
   sizes = [within_threshold, outside_threshold]
   colors = ['#1f77b4', '#ff7f0e']
   plt.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
-  plt.title('Percentage of Predictions Within 0.5 Days of Delivery', fontsize=13)
+  plt.title('Percentage of Predictions Within Threshold', fontsize=13)
   plt.show()
   print('\n')
 
