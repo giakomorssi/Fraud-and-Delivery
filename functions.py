@@ -98,8 +98,8 @@ def prediction_100(model_name = 'best_nn_p_05.h5', threshold = 0.5):
 
     within_threshold_mean.append(sum(abs(y_pred.ravel() - y_test.ravel()) <= threshold) / len(y_pred))
 
-  print(f'\nMSE Mean: {np.mean(mse_v)}')
-  print(f'MSE Std: {np.std(mse_v)}')
+  print(f'\n rMSE Mean: {np.mean(np.sqrt(mse_v))}')
+  print(f'rMSE Std: {np.std(np.sqrt(mse_v))}')
   print(f'Loss Mean: {np.mean(loss_v)}')
   print(f'Loss Std: {np.std(loss_v)}')
   print(f'Within Threshold Mean: {np.mean(within_threshold_mean)}')
