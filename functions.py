@@ -492,10 +492,7 @@ def fraud_detection(model_name='rf.pkl', iteration=10):
       if i % 10 == 0:
           print(f'Iteration: {i}')
 
-      if recall_score(y_test, y_pred, average=None)[0] < 0.7:
-        low.append(round(recall_score(y_test, y_pred, average=None)[0], 4))
-
-    print(f'\n Fraud Recall: {round(np.average(fraud_recall), 4)}, std: {round(np.std(fraud_recall), 4)}, Under 0.7: {len(low)}, {low}\n Suspected Recall: {round(np.average(suspected_recall), 4)}, std: {round(np.std(suspected_recall), 4)}\n Regular Recall: {round(np.average(regular_recall), 4)}, std: {round(np.std(regular_recall), 4)}\n Total: {round(np.average(recall_scores), 4)}, std: {round(np.std(recall_scores), 4)}')
+    print(f'\n Fraud Recall: {round(np.average(fraud_recall), 4)}, std: {round(np.std(fraud_recall), 4)}\n Suspected Recall: {round(np.average(suspected_recall), 4)}, std: {round(np.std(suspected_recall), 4)}\n Regular Recall: {round(np.average(regular_recall), 4)}, std: {round(np.std(regular_recall), 4)}\n Total: {round(np.average(recall_scores), 4)}, std: {round(np.std(recall_scores), 4)}')
 
     np.set_printoptions(precision=4)
     avg_conf_matrix /= iteration
