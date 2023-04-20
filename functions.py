@@ -501,3 +501,106 @@ def fraud_detection(model_name='rf.pkl', iteration=10):
     print('Precisions', precision_score(y_test, y_pred, average=None))
     print("\n Average Confusion Matrix:")
     print(avg_conf_matrix)
+
+def delay_detection(model_name='lr.pkl', iteration=10):
+    from google.colab import drive
+    drive.mount('/content/drive')
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.model_selection import train_test_split
+    from sklearn.decomposition import PCA
+    from sklearn.metrics import confusion_matrix, recall_score, precision_score, f1_score, accuracy_score
+    import os
+    import pickle
+    import pandas as pd
+    import numpy as np
+    from category_encoders import LeaveOneOutEncoder
+    from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+
+    with open(f'/content/drive/MyDrive/University/Deloitte/model_delay/{model_name}', 'rb') as f:
+        model = pickle.load(f)
+
+    df = pd.read_csv('/content/drive/MyDrive/University/Deloitte/SupplyChainDataset_delay.csv')
+
+    X = df.drop('Delay', axis = 1)
+    y = df['Delay']
+
+    # Standardize the data and split it into training and test sets
+    recall_scores = []
+    precision_scores = []
+    accuracy_scores = []
+    f1_scores = []
+    avg_conf_matrix = np.zeros((2, 2))
+    print('\nModel: \n', model, '\n')
+
+    for i in range(1, (iteration + 1)):
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, shuffle=True)
+
+      # initialize the encoder
+      enc = LeaveOneOutEncoder(cols=['Customer City', 'Order City'])
+
+      # fit and transform the entire dataset
+      X_train = enc.fit_transform(X_train, y_train)
+      X_test = enc.transform(X_test)
+
+      # Select columns for one-hot encoding
+      one_hot_cols = [0, 5, 7, 8, 11, 19]
+      one_hot_encoder = OneHotEncoder(handle_unknown="ignore")
+      X_train_one_hot = one_hot_encoder.fit_transform(X_train.iloc[:, one_hot_cols])
+      X_test_one_hot = one_hot_encoder.transform(X_test.iloc[:, one_hot_cols])
+      X_train = X_train.drop(X_train.columns[one_hot_cols], axis=1)
+      X_test = X_test.drop(X_test.columns[one_hot_cols], axis=1)
+      X_train = pd.concat([pd.DataFrame(X_train_one_hot.toarray()), X_train.reset_index(drop=True)], axis=1)
+      X_test = pd.concat([pd.DataFrame(X_test_one_hot.toarray()), X_test.reset_index(drop=True)], axis=1)
+
+      le = LabelEncoder()
+
+      # Shipping Mode
+      custom_order = ['Same Day', 'First Class', 'Second Class', 'Standard Class']
+      le.fit(custom_order)
+      X_train['Shipping Mode'] = le.fit_transform(X_train['Shipping Mode'])
+      X_test['Shipping Mode'] = le.transform(X_test['Shipping Mode'])
+
+      # Delivery Status
+      # Define the custom order
+      custom_order = ['Shipping on time', 'Advance shipping', 'Late delivery', 'Shipping canceled']
+      le.fit(custom_order)
+      X_train['Delivery Status'] = le.fit_transform(X_train['Delivery Status'])
+      X_test['Delivery Status'] = le.transform(X_test['Delivery Status'])
+
+      X_train.columns = X_train.columns.astype(str)
+      X_test.columns = X_test.columns.astype(str)
+
+      scaler = StandardScaler()
+
+      X_train[X_train.columns[82:]] = scaler.fit_transform(X_train[X_train.columns[82:]])
+      X_test[X_test.columns[82:]] = scaler.transform(X_test[X_test.columns[82:]])
+
+      X_train = pd.DataFrame(X_train)
+      X_test = pd.DataFrame(X_test)
+      y_train = pd.DataFrame(y_train)
+      y_train = np.ravel(y_train)
+
+      X_train.columns = X_train.columns.astype(str)
+      X_test.columns = X_test.columns.astype(str)
+
+      y_pred = model.predict(X_test)
+      conf_matrix = confusion_matrix(y_test, y_pred)
+
+      recall_scores.append(recall_score(y_test, y_pred))
+      precision_scores.append(precision_score(y_test, y_pred))
+      accuracy_scores.append(accuracy_score(y_test, y_pred))
+      f1_scores.append(f1_score(y_test, y_pred))
+
+      conf_matrix = confusion_matrix(y_test, y_pred)
+      avg_conf_matrix += conf_matrix
+
+      if i % 10 == 0:
+          print(f'Iteration: {i}')
+
+    print(f'\n Recall: {round(np.average(recall_scores), 4)}, std: {round(np.std(recall_scores), 4)}\n Precision: {round(np.average(precision_scores), 4)}, std: {round(np.std(precision_scores), 4)}\n F1: {round(np.average(f1_scores), 4)}, std: {round(np.std(f1_scores), 4)}\n Accuracy: {round(np.average(accuracy_scores), 4)}, std: {round(np.std(accuracy_scores), 4)}')
+
+    np.set_printoptions(precision=4)
+    avg_conf_matrix /= iteration
+    print("\n Average Confusion Matrix:")
+    print(avg_conf_matrix)    
