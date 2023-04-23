@@ -177,6 +177,204 @@ def prediction_h5(model_name = 'nn1.h5', threshold = 0.5):
   plt.xlabel('Theoretical Quantiles')
   plt.ylabel('Sample Quantiles')
   plt.show()
+  
+def prediction_h5_st(model, df, threshold = 0.5):
+  import streamlit as st
+  from sklearn.metrics import mean_squared_error
+  import pandas as pd
+  from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
+  from sklearn.model_selection import train_test_split
+  from sklearn.decomposition import PCA
+  from sklearn.metrics import confusion_matrix, recall_score
+  import os
+  import pickle
+  import pandas as pd
+  import numpy as np
+  from category_encoders import LeaveOneOutEncoder
+  from keras.models import load_model
+  from matplotlib import pyplot as plt
+  import seaborn as sns
+  from statsmodels.graphics.gofplots import qqplot
+
+  X = df.drop(['Days for shipping (real)', 'Product Name'], axis = 1)
+  y = df['Days for shipping (real)']
+  
+  within_threshold_mean = []
+  mse_v = []
+  loss_v = []
+
+  with st.spinner('Wait for it...'):
+    st.subheader('\nModel Summary:\n')
+    model.summary(print_fn=lambda x: st.text(x))
+
+  with st.spinner('Running prediction...'):
+    progress_bar = st.progress(0)
+
+    for i in range(1, 6):
+      X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True)
+
+      # initialize the encoder
+      enc = LeaveOneOutEncoder(cols=['Customer City', 'Order City', 'Order State', 'Order Region'])
+
+      # fit and transform the entire dataset
+      X_train = enc.fit_transform(X_train, y_train)
+      X_test = enc.transform(X_test)
+
+      # fit and transform the entire dataset
+      X_train = enc.fit_transform(X_train, y_train)
+      X_test = enc.transform(X_test)
+
+      # Select columns for one-hot encoding
+      one_hot_cols = [0, 7, 9, 12, 15, 30]
+      # Type, Department Name, Category Name, Market, Order Status, Customer Segment
+
+      # Fit one-hot encoder to training data
+      one_hot_encoder = OneHotEncoder(handle_unknown="ignore")
+
+      # Apply one-hot encoder to training and test data
+      X_train_one_hot = one_hot_encoder.fit_transform(X_train.iloc[:, one_hot_cols])
+      X_test_one_hot = one_hot_encoder.transform(X_test.iloc[:, one_hot_cols])
+
+      # Remove original columns from training and test data
+      X_train = X_train.drop(X_train.columns[one_hot_cols], axis=1)
+      X_test = X_test.drop(X_test.columns[one_hot_cols], axis=1)
+
+      le = LabelEncoder()
+      # Shipping Mode
+      custom_order = ['Same Day', 'First Class', 'Second Class', 'Standard Class']
+      le.fit(custom_order)
+      X_train['Shipping Mode'] = le.fit_transform(X_train['Shipping Mode'])
+      X_test['Shipping Mode'] = le.transform(X_test['Shipping Mode'])
+
+      # Delivery Status
+      # Define the custom order
+      custom_order = ['Shipping on time', 'Advance shipping', 'Late delivery', 'Shipping canceled']
+      le.fit(custom_order)
+      X_train['Delivery Status'] = le.fit_transform(X_train['Delivery Status'])
+      X_test['Delivery Status'] = le.transform(X_test['Delivery Status'])
+
+      # Concatenate one-hot encoded columns with remaining data
+      X_train = pd.concat([pd.DataFrame(X_train_one_hot.toarray()), X_train.reset_index(drop=True)], axis=1)
+      X_test = pd.concat([pd.DataFrame(X_test_one_hot.toarray()), X_test.reset_index(drop=True)], axis=1)
+
+      scaler = StandardScaler()
+
+      X_train[X_train.columns[82:]] = scaler.fit_transform(X_train[X_train.columns[82:]])
+      X_test[X_test.columns[82:]] = scaler.transform(X_test[X_test.columns[82:]])
+
+      # Split the dataset into features and target
+      X_train = pd.DataFrame(X_train)
+      X_test = pd.DataFrame(X_test)
+      y_train = pd.DataFrame(y_train)
+      y_train = np.ravel(y_train)
+
+      X_train.columns = X_train.columns.astype(str)
+      X_test.columns = X_test.columns.astype(str)
+
+      loss, mse = model.evaluate(X_test, y_test, verbose=1)
+
+      mse_v.append(mse)
+      loss_v.append(loss)
+
+      y_pred = model.predict(X_test, verbose=1)
+
+      progress_bar.progress((i + 1) / 6)
+
+      # Calculate the percentage of predictions within the threshold value
+
+      within_threshold_mean.append(sum(abs(y_pred.ravel() - y_test.ravel()) <= threshold) / len(y_pred))
+
+  st.subheader('Model Performance')
+  table_header = ['Metric', 'Mean', 'Std']
+  table_data = [
+      ['rMSE', f'{np.mean(np.sqrt(mse_v)):.6f}', f'{np.std(np.sqrt(mse_v)):.6f}'],
+      ['Loss', f'{np.mean(loss_v):.6f}', f'{np.std(loss_v):.6f}'],
+      ['Within Threshold', f'{np.mean(within_threshold_mean):.6f}', f'{np.std(within_threshold_mean):.6f}']
+  ]
+
+  st.table(pd.DataFrame(table_data, columns=table_header))
+    
+  y_test = np.ravel(y_test)
+  y_pred = np.ravel(y_pred)
+  
+  residuals = y_test - y_pred
+
+  # Initialize a dictionary to store the squared errors and average predictions for each class
+  mse_dict = {label: {'errors': [], 'preds': []} for label in np.unique(y_test)}
+
+  # Calculate the squared error and average prediction for each instance and add them to the corresponding class lists
+  for true_label, pred_label, error in zip(y_test, y_pred, (y_test - y_pred) ** 2):
+      mse_dict[true_label]['errors'].append(error)
+      mse_dict[true_label]['preds'].append(pred_label)
+
+  st.subheader('MSE and Average Prediction for Each Day')
+  table_header = ['Class', 'Instances', 'RMSE', 'Average Predicted Value']
+  table_data = []
+  # Calculate the mean squared error and average prediction for each class and add the results to the table_data list
+  for label in mse_dict:
+      instances = len(mse_dict[label]['errors'])
+      if instances > 0:
+          mse = np.mean(mse_dict[label]['errors'])
+          rmse = np.sqrt(mse)
+          avg_pred = np.mean(mse_dict[label]['preds'])
+          table_data.append([label, instances, f'{rmse:.6f}', f'{avg_pred:.6f}'])
+      else:
+          table_data.append([label, 'no instances', 'N/A', 'N/A'])
+
+  st.table(pd.DataFrame(table_data, columns=table_header))
+
+
+  st.subheader('Distribution Plot of Prediction vs. Actual')
+  # Distribution plot
+  fig, ax = plt.subplots(figsize=(10, 6))
+  sns.set_palette('colorblind')
+  sns.set_style('darkgrid')
+  sns.kdeplot(y_test.ravel(), label='Actual', fill=True)
+  sns.kdeplot(y_pred.ravel(), label='Predicted', fill=True)
+  plt.xlabel('Delivery time')
+  plt.ylabel('Density')
+  plt.title('Distribution Plot')
+  plt.legend()
+  st.pyplot(fig)
+  st.write('\n')
+
+  st.subheader('Histogram of the Residuals')
+  # Plot a histogram of the residuals
+  sns.set_style('darkgrid')
+  fig, ax = plt.subplots(figsize=(10, 6))
+  sns.histplot(residuals, bins=100, color='green', kde=True, ax=ax)
+  ax.set_xlabel('Residuals')
+  ax.set_ylabel('Frequency')
+  ax.set_title('Histogram of Residuals')
+  ax.set_xlim((-3, 3))
+  sns.despine()
+  st.pyplot(fig)
+  st.write('\n')
+
+  st.subheader('Percentage of Predictions within Half Day')
+  # Plot the percentage of predictions within threshold days
+  y_pred = model.predict(X_test)
+  within_threshold = (np.abs(y_pred.ravel() - y_test.ravel()) < threshold).mean()
+  outside_threshold = 1 - within_threshold
+  fig, ax = plt.subplots()
+  labels = ['Within threshold', 'Outside threshold']
+  sizes = [within_threshold, outside_threshold]
+  colors = ['#1f77b4', '#ff7f0e']
+  plt.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
+  plt.title('Percentage of Predictions Within Threshold', fontsize=13)
+  st.pyplot(fig)
+  st.write('\n')
+
+  st.subheader('QQ Plot')
+  # QQ plot
+  from statsmodels.graphics.gofplots import qqplot
+  fig, ax = plt.subplots()
+  qqplot(residuals, line='s')
+  plt.title('QQ Plot of Residuals')
+  plt.xlabel('Theoretical Quantiles')
+  plt.ylabel('Sample Quantiles')
+  st.pyplot(fig)
+  st.write('\n')
 
 def prediction_pkl(model_name = 'rf.pkl', threshold = 0.5):
   from google.colab import drive
