@@ -187,9 +187,8 @@ def prediction_h5_st(model, df, threshold = 0.5):
 
   st.subheader('QQ Plot')
   # QQ plot
-  from statsmodels.graphics.gofplots import qqplot
   fig, ax = plt.subplots()
-  qqplot(residuals, line='s')
+  sns.qqplot(residuals, line='s')
   plt.title('QQ Plot of Residuals')
   plt.xlabel('Theoretical Quantiles')
   plt.ylabel('Sample Quantiles')
