@@ -373,6 +373,7 @@ def fraud_detection_st(model, df):
       st.pyplot(fig)
 
 def delay_detection_st(model, df):
+      import streamlit as st
       from sklearn.preprocessing import StandardScaler
       from sklearn.model_selection import train_test_split
       from sklearn.decomposition import PCA
