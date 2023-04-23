@@ -480,13 +480,13 @@ def delay_detection_st(model, df):
 
       st.subheader('Confusion Matrix')
 
-      fig, ax = plt.subplots(figsize=(8, 6))
       pd.options.display.float_format = '{:.1f}'.format
-      np.set_printoptions(precision=1, suppress=True)
+      fig, ax = plt.subplots(figsize=(8, 6))
       avg_conf_matrix /= 10
+      np.set_printoptions(precision=1, suppress=True)
       avg_conf_matrix = np.round(avg_conf_matrix).astype(int)
       sns.heatmap(avg_conf_matrix, annot=True, cmap='Blues', fmt='.1f')
       plt.xlabel('Predicted')
       plt.ylabel('Actual')
       plt.title('Confusion Matrix')
-      st.pyplot(fig)      
+      st.pyplot(fig)
