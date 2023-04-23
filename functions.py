@@ -188,15 +188,13 @@ def prediction_h5_st(model, df, threshold = 0.5):
   st.subheader('QQ Plot')
   # QQ plot
   fig, ax = plt.subplots()
-  sns.qqplot(residuals, line='s')
-  plt.title('QQ Plot of Residuals')
+  sm.qqplot(data, line='s', ax=ax)
+  ax.set_title('QQ Plot')
   plt.xlabel('Theoretical Quantiles')
   plt.ylabel('Sample Quantiles')
 
   # Show the plot in Streamlit
-  st.subheader('QQ Plot of Residuals')
   st.pyplot(fig)
-  st.write('\n')
 
 def fraud_detection_st(model, df):
       import streamlit as st
