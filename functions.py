@@ -373,6 +373,9 @@ def prediction_h5_st(model, df, threshold = 0.5):
   plt.title('QQ Plot of Residuals')
   plt.xlabel('Theoretical Quantiles')
   plt.ylabel('Sample Quantiles')
+
+  # Show the plot in Streamlit
+  st.subheader('QQ Plot of Residuals')
   st.pyplot(fig)
   st.write('\n')
 
