@@ -190,7 +190,7 @@ def prediction_h5_st(model, df, threshold = 0.5):
   st.subheader('QQ Plot')
   # QQ plot
   fig, ax = plt.subplots()
-  sm.qqplot(data, line='s', ax=ax)
+  sm.qqplot(residuals, line='s', ax=ax)
   ax.set_title('QQ Plot')
   plt.xlabel('Theoretical Quantiles')
   plt.ylabel('Sample Quantiles')
