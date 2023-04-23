@@ -15,6 +15,8 @@ def prediction_h5_st(model, df, threshold = 0.5):
   from matplotlib import pyplot as plt
   import seaborn as sns
   from statsmodels.graphics.gofplots import qqplot
+  import statsmodels.api as sm
+
 
   X = df.drop(['Days for shipping (real)', 'Product Name'], axis = 1)
   y = df['Days for shipping (real)']
