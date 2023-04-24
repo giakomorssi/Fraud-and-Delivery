@@ -18,6 +18,7 @@ def prediction_h5_st(model, df, threshold = 0.5):
   import statsmodels.api as sm
 
 
+  df.drop(['Delivery Status'], axis = 1, inplace = True)
   X = df.drop(['Days for shipping (real)', 'Product Name'], axis = 1)
   y = df['Days for shipping (real)']
   
@@ -47,7 +48,7 @@ def prediction_h5_st(model, df, threshold = 0.5):
       X_test = enc.transform(X_test)
 
       # Select columns for one-hot encoding
-      one_hot_cols = [0, 7, 9, 12, 15, 30]
+      one_hot_cols = [0, 6, 8, 11, 14, 29]
       # Type, Department Name, Category Name, Market, Order Status, Customer Segment
 
       # Fit one-hot encoder to training data
@@ -67,13 +68,6 @@ def prediction_h5_st(model, df, threshold = 0.5):
       le.fit(custom_order)
       X_train['Shipping Mode'] = le.fit_transform(X_train['Shipping Mode'])
       X_test['Shipping Mode'] = le.transform(X_test['Shipping Mode'])
-
-      # Delivery Status
-      # Define the custom order
-      custom_order = ['Shipping on time', 'Advance shipping', 'Late delivery', 'Shipping canceled']
-      le.fit(custom_order)
-      X_train['Delivery Status'] = le.fit_transform(X_train['Delivery Status'])
-      X_test['Delivery Status'] = le.transform(X_test['Delivery Status'])
 
       # Concatenate one-hot encoded columns with remaining data
       X_train = pd.concat([pd.DataFrame(X_train_one_hot.toarray()), X_train.reset_index(drop=True)], axis=1)
@@ -391,7 +385,8 @@ def delay_detection_st(model, df):
       from sklearn.preprocessing import OneHotEncoder, LabelEncoder
       import matplotlib.pyplot as plt
       import seaborn as sns
-
+      
+      df.drop('Delivery Status', axis = 1, inplace = True)
       X = df.drop('Delay', axis = 1)
       y = df['Delay']
 
@@ -419,7 +414,7 @@ def delay_detection_st(model, df):
             X_test = enc.transform(X_test)
 
             # Select columns for one-hot encoding
-            one_hot_cols = [0, 5, 7, 8, 11, 19]
+            one_hot_cols = [0, 4, 6, 7, 10, 18]
             one_hot_encoder = OneHotEncoder(handle_unknown="ignore")
             X_train_one_hot = one_hot_encoder.fit_transform(X_train.iloc[:, one_hot_cols])
             X_test_one_hot = one_hot_encoder.transform(X_test.iloc[:, one_hot_cols])
@@ -435,13 +430,6 @@ def delay_detection_st(model, df):
             le.fit(custom_order)
             X_train['Shipping Mode'] = le.fit_transform(X_train['Shipping Mode'])
             X_test['Shipping Mode'] = le.transform(X_test['Shipping Mode'])
-
-            # Delivery Status
-            # Define the custom order
-            custom_order = ['Shipping on time', 'Advance shipping', 'Late delivery', 'Shipping canceled']
-            le.fit(custom_order)
-            X_train['Delivery Status'] = le.fit_transform(X_train['Delivery Status'])
-            X_test['Delivery Status'] = le.transform(X_test['Delivery Status'])
 
             X_train.columns = X_train.columns.astype(str)
             X_test.columns = X_test.columns.astype(str)
