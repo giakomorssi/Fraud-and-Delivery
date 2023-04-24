@@ -17,9 +17,7 @@ def prediction_h5_st(model, df, threshold = 0.5):
   from statsmodels.graphics.gofplots import qqplot
   import statsmodels.api as sm
 
-
-  df.drop(['Delivery Status'], axis = 1, inplace = True)
-  X = df.drop(['Days for shipping (real)', 'Product Name'], axis = 1)
+  X = df.drop(['Days for shipping (real)', 'Product Name', 'Delivery Status'], axis = 1)
   y = df['Days for shipping (real)']
   
   within_threshold_mean = []
@@ -223,13 +221,6 @@ def fraud_detection_st(model, df):
       avg_conf_matrix = np.zeros((3, 3))
       with st.spinner('Wait for it...'):
         st.subheader('\nModel:\n')
-        st.write("VotingClassifier(estimators=[('rf',
-                              RandomForestClassifier(class_weight='balanced',
-                                                     max_depth=4)),
-                             ('lr',
-                              LogisticRegression(class_weight='balanced',
-                                                 max_iter=1000))],
-                 voting='soft')")
 
       with st.spinner('Running prediction...'):
         progress_bar = st.progress(0)
@@ -386,8 +377,7 @@ def delay_detection_st(model, df):
       import matplotlib.pyplot as plt
       import seaborn as sns
       
-      df.drop('Delivery Status', axis = 1, inplace = True)
-      X = df.drop('Delay', axis = 1)
+      X = df.drop('Delay', 'Delivery Status', axis = 1)
       y = df['Delay']
 
       # Standardize the data and split it into training and test sets
