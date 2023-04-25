@@ -98,7 +98,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
   st.subheader('Model Performance')
   table_header = ['Metric', 'Mean', 'Std']
   table_data = [
-      ['rMSE', f'{np.mean(np.sqrt(mse)):.6f}', f'{np.std(np.sqrt(mse)):.6f}'],
+      ['rMSE', f'{np.mean(np.sqrt(mse)):.6f}', f'{np.std(np.sqrt(mse)):.10f}'],
       ['Within Threshold', f'{np.mean(within_threshold_mean):.6f}', f'{np.std(within_threshold_mean):.10f}']
   ]
 
@@ -127,7 +127,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
           mse = np.mean(mse_dict[label]['errors'])
           rmse = np.sqrt(mse)
           avg_pred = np.mean(mse_dict[label]['preds'])
-          table_data.append([label, instances, f'{rmse:.6f}', f'{avg_pred:.10f}'])
+          table_data.append([label, instances, f'{rmse:.4f}', f'{avg_pred:.4f}'])
       else:
           table_data.append([label, 'no instances', 'N/A', 'N/A'])
 
