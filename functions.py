@@ -373,7 +373,7 @@ def delay_detection_st(model, df):
       import matplotlib.pyplot as plt
       import seaborn as sns
       
-      X = df.drop('Delay', 'Delivery Status', axis = 1)
+      X = df.drop('Delay', axis = 1)
       y = df['Delay']
 
       # Standardize the data and split it into training and test sets
