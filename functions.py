@@ -1,4 +1,4 @@
-def prediction_h5_st(model, df, threshold = 0.5):
+def prediction_pkl_st(model, df, threshold = 0.1):
   import streamlit as st
   from sklearn.metrics import mean_squared_error
   import pandas as pd
@@ -25,8 +25,8 @@ def prediction_h5_st(model, df, threshold = 0.5):
   loss_v = []
 
   with st.spinner('Wait for it...'):
-    st.subheader('\nModel Summary:\n')
-    model.summary(print_fn=lambda x: st.text(x))
+    st.subheader('\nModel:\n')
+    st.write(model)
 
   with st.spinner('Running prediction...'):
     progress_bar = st.progress(0)
@@ -85,12 +85,7 @@ def prediction_h5_st(model, df, threshold = 0.5):
       X_train.columns = X_train.columns.astype(str)
       X_test.columns = X_test.columns.astype(str)
 
-      loss, mse = model.evaluate(X_test, y_test, verbose=1)
-
-      mse_v.append(mse)
-      loss_v.append(loss)
-
-      y_pred = model.predict(X_test, verbose=1)
+      y_pred = model.predict(X_test)
 
       progress_bar.progress((i + 1) / 6)
 
@@ -102,7 +97,6 @@ def prediction_h5_st(model, df, threshold = 0.5):
   table_header = ['Metric', 'Mean', 'Std']
   table_data = [
       ['rMSE', f'{np.mean(np.sqrt(mse_v)):.6f}', f'{np.std(np.sqrt(mse_v)):.6f}'],
-      ['Loss', f'{np.mean(loss_v):.6f}', f'{np.std(loss_v):.6f}'],
       ['Within Threshold', f'{np.mean(within_threshold_mean):.6f}', f'{np.std(within_threshold_mean):.6f}']
   ]
 
