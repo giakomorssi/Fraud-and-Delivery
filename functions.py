@@ -24,7 +24,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
     st.subheader('\nModel:\n')
     st.write(model)
    
-  st.write(f'The Within Threshold is: {threshold} that corresponds to {24*threshold} hours.')
+  st.write(f'The Within Threshold is: {threshold} that corresponds to {(24*threshold)*10} hours.')
 
   with st.spinner('Running prediction...'):
     progress_bar = st.progress(0)
@@ -96,17 +96,14 @@ def prediction_pkl_st(model, df, threshold = 0.01):
       
       mse = mean_squared_error(y_test, y_pred)
       mse_v.append(mse)
-      rmse = np.sqrt(mse)
       
-      st.write(f'rMSE: {rmse}')
-
       within_threshold_mean.append(sum(abs(y_pred.ravel() - y_test.ravel()) <= threshold) / len(y_pred))
 
   st.subheader('Model Performance')
   table_header = ['Metric', 'Mean', 'Std']
   table_data = [
-      ['rMSE', f'{np.mean(np.sqrt(mse_v)):.6f}', f'{np.std(mse_v):.6f}'],
-      ['Within Threshold', f'{np.mean(within_threshold_mean):.6f}', f'{np.std(within_threshold_mean):.6f}']
+      ['rMSE', f'{np.mean(np.sqrt(mse_v)):.4f}', f'{np.std(mse_v):.10f}'],
+      ['Within Threshold', f'{np.mean(within_threshold_mean):.4f}', f'{np.std(within_threshold_mean):.10f}']
   ]
 
   st.table(pd.DataFrame(table_data, columns=table_header))
