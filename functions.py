@@ -19,7 +19,6 @@ def prediction_pkl_st(model, df, threshold = 0.01):
   
   within_threshold_mean = []
   mse_v = []
-  loss_v = []
 
   with st.spinner('Wait for it...'):
     st.subheader('\nModel:\n')
@@ -96,6 +95,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
       # Calculate the percentage of predictions within the threshold value
       
       mse = mean_squared_error(y_test, y_pred)
+      mse_v.append(mse)
       rmse = np.sqrt(mse)
       
       st.write(f'rMSE: {rmse}')
@@ -105,8 +105,8 @@ def prediction_pkl_st(model, df, threshold = 0.01):
   st.subheader('Model Performance')
   table_header = ['Metric', 'Mean']
   table_data = [
-      ['rMSE', f'{np.mean(np.sqrt(mse)):.6f}'],
-      ['Within Threshold', f'{np.mean(within_threshold_mean):.6f}']
+      ['rMSE', f'{np.mean(np.sqrt(mse_v)):.6f}, Std: {np.std(mse_v):.6f}'],
+      ['Within Threshold', f'{np.mean(within_threshold_mean):.6f}, Std: {np.std(within_threshold_mean):.6f}']
   ]
 
   st.table(pd.DataFrame(table_data, columns=table_header))
