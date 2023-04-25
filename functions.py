@@ -16,6 +16,8 @@ def prediction_pkl_st(model, df, threshold = 0.01):
   import seaborn as sns
   from statsmodels.graphics.gofplots import qqplot
   import statsmodels.api as sm
+  
+  df = df.sample(frac=1)
 
   X = df.drop(['Days for shipping (real)', 'Product Name'], axis = 1)
   y = df['Days for shipping (real)']
@@ -203,6 +205,8 @@ def fraud_detection_st(model, df):
       from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 
       df.drop(['Order Status'], axis=1, inplace=True)
+      
+      df = df.sample(frac=1)
 
       X = df.drop(['Category'], axis=1)
       y = df['Category']
@@ -372,6 +376,8 @@ def delay_detection_st(model, df):
       from sklearn.preprocessing import OneHotEncoder, LabelEncoder
       import matplotlib.pyplot as plt
       import seaborn as sns
+      
+      df = df.sample(frac=1)
       
       X = df.drop('Delay', axis = 1)
       y = df['Delay']
