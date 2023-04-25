@@ -17,11 +17,6 @@ def prediction_pkl_st(model, df, threshold = 0.01):
   from statsmodels.graphics.gofplots import qqplot
   import statsmodels.api as sm
   
-  df = df.sample(frac=1)
-
-  X = df.drop(['Days for shipping (real)', 'Product Name'], axis = 1)
-  y = df['Days for shipping (real)']
-  
   within_threshold_mean = []
   mse_v = []
   loss_v = []
@@ -34,6 +29,11 @@ def prediction_pkl_st(model, df, threshold = 0.01):
     progress_bar = st.progress(0)
 
     for i in range(1, 6):
+      df = df.sample(frac=1)
+
+      X = df.drop(['Days for shipping (real)', 'Product Name'], axis = 1)
+      y = df['Days for shipping (real)']
+      
       X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True)
 
       # initialize the encoder
@@ -206,11 +206,6 @@ def fraud_detection_st(model, df):
 
       df.drop(['Order Status'], axis=1, inplace=True)
       
-      df = df.sample(frac=1)
-
-      X = df.drop(['Category'], axis=1)
-      y = df['Category']
-      
       # Standardize the data and split it into training and test sets
       recall_scores = []
       precision_scores = []
@@ -224,7 +219,12 @@ def fraud_detection_st(model, df):
 
       with st.spinner('Running prediction...'):
         progress_bar = st.progress(0)
-        for i in range(1, (10 + 1)):
+        for i in range(1, (11)):
+          df = df.sample(frac=1)
+
+          X = df.drop(['Category'], axis=1)
+          y = df['Category']
+          
           X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, shuffle=True)
 
           le = LabelEncoder()
@@ -377,10 +377,7 @@ def delay_detection_st(model, df):
       import matplotlib.pyplot as plt
       import seaborn as sns
       
-      df = df.sample(frac=1)
       
-      X = df.drop('Delay', axis = 1)
-      y = df['Delay']
 
       # Standardize the data and split it into training and test sets
       recall_scores = []
@@ -395,6 +392,10 @@ def delay_detection_st(model, df):
       with st.spinner('Running prediction...'):
           progress_bar = st.progress(0)
           for i in range(1, (10 + 1)):
+            df = df.sample(frac=1)
+      
+            X = df.drop('Delay', axis = 1)
+            y = df['Delay']
 
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, shuffle=True)
 
