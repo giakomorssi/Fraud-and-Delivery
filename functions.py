@@ -28,7 +28,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
   with st.spinner('Running prediction...'):
     progress_bar = st.progress(0)
 
-    for i in range(1, 6):
+    for i in range(1, 11):
       df = df.sample(frac=1)
 
       X = df.drop(['Days for shipping (real)', 'Product Name'], axis = 1)
@@ -89,7 +89,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
 
       y_pred = model.predict(X_test)
 
-      progress_bar.progress((i + 1) / 6)
+      progress_bar.progress((i + 1) / 11)
 
       # Calculate the percentage of predictions within the threshold value
       
