@@ -1,4 +1,4 @@
-def prediction_pkl_st(model, df, threshold = 0.1):
+def prediction_pkl_st(model, df, threshold = 0.5):
   import streamlit as st
   from sklearn.metrics import mean_squared_error
   import pandas as pd
@@ -90,13 +90,15 @@ def prediction_pkl_st(model, df, threshold = 0.1):
       progress_bar.progress((i + 1) / 6)
 
       # Calculate the percentage of predictions within the threshold value
+      
+      mse = mean_squared_error(y_test, y_pred)
 
       within_threshold_mean.append(sum(abs(y_pred.ravel() - y_test.ravel()) <= threshold) / len(y_pred))
 
   st.subheader('Model Performance')
   table_header = ['Metric', 'Mean', 'Std']
   table_data = [
-      ['rMSE', f'{np.mean(np.sqrt(mse_v)):.6f}', f'{np.std(np.sqrt(mse_v)):.6f}'],
+      ['rMSE', f'{np.mean(np.sqrt(mse)):.6f}', f'{np.std(np.sqrt(mse)):.6f}'],
       ['Within Threshold', f'{np.mean(within_threshold_mean):.6f}', f'{np.std(within_threshold_mean):.6f}']
   ]
 
