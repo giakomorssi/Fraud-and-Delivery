@@ -99,7 +99,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
   table_header = ['Metric', 'Mean', 'Std']
   table_data = [
       ['rMSE', f'{np.mean(np.sqrt(mse)):.6f}', f'{np.std(np.sqrt(mse)):.6f}'],
-      ['Within Threshold', f'{np.mean(within_threshold_mean):.6f}', f'{np.std(within_threshold_mean):.6f}']
+      ['Within Threshold', f'{np.mean(within_threshold_mean):.6f}', f'{np.std(within_threshold_mean):.10f}']
   ]
 
   st.table(pd.DataFrame(table_data, columns=table_header))
