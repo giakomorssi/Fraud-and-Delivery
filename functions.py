@@ -99,7 +99,6 @@ def prediction_pkl_st(model, df, threshold = 0.01):
       rmse = np.sqrt(mse)
       
       st.write(f'rMSE: {rmse}')
-      st.write(f'Within Threshold: {within_threshold_mean}')
 
       within_threshold_mean.append(sum(abs(y_pred.ravel() - y_test.ravel()) <= threshold) / len(y_pred))
 
