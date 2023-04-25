@@ -25,7 +25,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
     st.subheader('\nModel:\n')
     st.write(model)
    
-  st.write(f'The Within Threshold is: {threshold} that corresponds to {24/threshold} hours.')
+  st.write(f'The Within Threshold is: {threshold} that corresponds to {24*threshold} hours.')
 
   with st.spinner('Running prediction...'):
     progress_bar = st.progress(0)
