@@ -17,7 +17,7 @@ def prediction_pkl_st(model, df, threshold = 0.1):
   from statsmodels.graphics.gofplots import qqplot
   import statsmodels.api as sm
 
-  X = df.drop(['Days for shipping (real)', 'Product Name', 'Delivery Status'], axis = 1)
+  X = df.drop(['Days for shipping (real)', 'Product Name'], axis = 1)
   y = df['Days for shipping (real)']
   
   within_threshold_mean = []
