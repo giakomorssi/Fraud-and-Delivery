@@ -1,4 +1,4 @@
-def prediction_pkl_st(model, df, threshold = 0.5):
+def prediction_pkl_st(model, df, threshold = 0.01):
   import streamlit as st
   from sklearn.metrics import mean_squared_error
   import pandas as pd
@@ -127,7 +127,7 @@ def prediction_pkl_st(model, df, threshold = 0.5):
           mse = np.mean(mse_dict[label]['errors'])
           rmse = np.sqrt(mse)
           avg_pred = np.mean(mse_dict[label]['preds'])
-          table_data.append([label, instances, f'{rmse:.6f}', f'{avg_pred:.6f}'])
+          table_data.append([label, instances, f'{rmse:.6f}', f'{avg_pred:.10f}'])
       else:
           table_data.append([label, 'no instances', 'N/A', 'N/A'])
 
@@ -156,7 +156,7 @@ def prediction_pkl_st(model, df, threshold = 0.5):
   ax.set_xlabel('Residuals')
   ax.set_ylabel('Frequency')
   ax.set_title('Histogram of Residuals')
-  ax.set_xlim((-3, 3))
+  ax.set_xlim((-1, 1))
   sns.despine()
   st.pyplot(fig)
   st.write('\n')
@@ -449,10 +449,10 @@ def delay_detection_st(model, df):
 
       table_header = ['Score Type', 'Average', 'Std']
       table_data = [
-          ['Recall', f'{round(np.average(recall_scores), 4)}', f'{round(np.std(recall_scores), 4)}'],
-          ['Precision', f'{round(np.average(precision_scores), 4)}', f'{round(np.std(precision_scores), 4)}'],
-          ['F1', f'{round(np.average(f1_scores), 4)}', f'{round(np.std(f1_scores), 4)}'],
-          ['Accuracy', f'{round(np.average(accuracy_scores), 4)}', f'{round(np.std(accuracy_scores), 4)}']
+          ['Recall', f'{round(np.average(recall_scores), 4)}', f'{round(np.std(recall_scores), 6)}'],
+          ['Precision', f'{round(np.average(precision_scores), 4)}', f'{round(np.std(precision_scores), 6)}'],
+          ['F1', f'{round(np.average(f1_scores), 4)}', f'{round(np.std(f1_scores), 6)}'],
+          ['Accuracy', f'{round(np.average(accuracy_scores), 4)}', f'{round(np.std(accuracy_scores), 6)}']
       ]
 
       st.table(pd.DataFrame(table_data, columns=table_header))
