@@ -94,6 +94,9 @@ def prediction_pkl_st(model, df, threshold = 0.01):
       # Calculate the percentage of predictions within the threshold value
       
       mse = mean_squared_error(y_test, y_pred)
+      rmse = np.sqrt(mse)
+      
+      st.write(f'MSE: {rmse}')
 
       within_threshold_mean.append(sum(abs(y_pred.ravel() - y_test.ravel()) <= threshold) / len(y_pred))
 
