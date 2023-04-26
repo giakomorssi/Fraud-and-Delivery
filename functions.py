@@ -22,7 +22,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
 
   with st.spinner('Wait for it...'):
     st.subheader('\nModel:\n')
-    st.write("StackingRegressor(estimators=[('brr', BayesianRidge()), ('ridge', Ridge())], final_estimator=DecisionTreeRegressor())")
+    st.write("**StackingRegressor(estimators=[('brr', BayesianRidge()), ('ridge', Ridge())], final_estimator=DecisionTreeRegressor())**")
    
   st.write(f'The Within Threshold is: {threshold} that corresponds to {(24*threshold)*10} hours.')
 
