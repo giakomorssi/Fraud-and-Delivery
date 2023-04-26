@@ -5,7 +5,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
   from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
   from sklearn.model_selection import train_test_split
   from sklearn.decomposition import PCA
-  from sklearn.metrics import confusion_matrix, recall_score, mean_absolute_error
+  from sklearn.metrics import confusion_matrix, recall_score, mean_absolute_error, r2_score
   import os
   import pickle
   import pandas as pd
@@ -20,6 +20,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
   within_threshold_mean = []
   mse_v = []
   mae_v = []
+  r2_score_v = []
 
   with st.spinner('Wait for it...'):
     st.subheader('\nModel:\n')
@@ -97,17 +98,20 @@ def prediction_pkl_st(model, df, threshold = 0.01):
       
       mse = mean_squared_error(y_test, y_pred)
       mae = mean_absolute_error(y_test, y_pred)
+      r2_score_v.append(r2_score(y_test, y_pred))
       mae_v.append(mae)
       mse_v.append(mse)
       
       within_threshold_mean.append(sum(abs(y_pred.ravel() - y_test.ravel()) <= threshold) / len(y_pred))
 
   st.subheader('Model Performance')
-  table_header = ['Metric', 'Mean', 'Std']
+  table_header = ['Metric', 'Mean']
   table_data = [
-      ['rMSE', f'{np.mean(np.sqrt(mse_v)):.4f}', f'{np.std(mse_v):.10f}'],
-      ['MAE', f'{np.mean(mae_v):.4f}', f'{np.std(mae_v):.10f}'],
-      ['Within Threshold', f'{np.mean(within_threshold_mean):.4f}', f'{np.std(within_threshold_mean):.10f}']
+      ['rMSE', f'{np.mean(np.sqrt(mse_v)):.4f}'],
+      ['MAE', f'{np.mean(mae_v):.4f}'],
+      ['MSE', f'{np.mean(mse_v):.4f}'],
+      ['R2', f'{np.mean(r2_score_v):.4f}'],
+      ['Within Threshold', f'{np.mean(within_threshold_mean):.4f}']
   ]
 
   st.table(pd.DataFrame(table_data, columns=table_header))
