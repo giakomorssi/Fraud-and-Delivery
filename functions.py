@@ -5,7 +5,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
   from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
   from sklearn.model_selection import train_test_split
   from sklearn.decomposition import PCA
-  from sklearn.metrics import confusion_matrix, recall_score
+  from sklearn.metrics import confusion_matrix, recall_score, mean_absolute_error
   import os
   import pickle
   import pandas as pd
@@ -19,6 +19,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
   
   within_threshold_mean = []
   mse_v = []
+  mae_v = []
 
   with st.spinner('Wait for it...'):
     st.subheader('\nModel:\n')
@@ -95,6 +96,8 @@ def prediction_pkl_st(model, df, threshold = 0.01):
       # Calculate the percentage of predictions within the threshold value
       
       mse = mean_squared_error(y_test, y_pred)
+      mae = mean_absolute_error(y_test, y_pred)
+      mae_v.append(mae)
       mse_v.append(mse)
       
       within_threshold_mean.append(sum(abs(y_pred.ravel() - y_test.ravel()) <= threshold) / len(y_pred))
@@ -103,6 +106,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
   table_header = ['Metric', 'Mean', 'Std']
   table_data = [
       ['rMSE', f'{np.mean(np.sqrt(mse_v)):.4f}', f'{np.std(mse_v):.10f}'],
+      ['MAE', f'{np.mean(mae_v):.4f}', f'{np.std(mae_v):.10f}'],
       ['Within Threshold', f'{np.mean(within_threshold_mean):.4f}', f'{np.std(within_threshold_mean):.10f}']
   ]
 
