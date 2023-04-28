@@ -34,7 +34,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
     for i in range(1, 11):
       df = df.sample(frac=1)
 
-      X = df.drop(['Days for shipping (real)', 'Product Name'], axis = 1)
+      X = df.drop(['Days for shipping (real)'], axis = 1)
       y = df['Days for shipping (real)']
       
       X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True)
@@ -51,7 +51,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
       X_test = enc.transform(X_test)
 
       # Select columns for one-hot encoding
-      one_hot_cols = [0, 6, 8, 11, 14, 29]
+      one_hot_cols = [0, 3, 5, 7, 10]
       # Type, Department Name, Category Name, Market, Order Status, Customer Segment
 
       # Fit one-hot encoder to training data
@@ -78,8 +78,8 @@ def prediction_pkl_st(model, df, threshold = 0.01):
 
       scaler = StandardScaler()
 
-      X_train[X_train.columns[82:]] = scaler.fit_transform(X_train[X_train.columns[82:]])
-      X_test[X_test.columns[82:]] = scaler.transform(X_test[X_test.columns[82:]])
+      X_train[X_train.columns[73:]] = scaler.fit_transform(X_train[X_train.columns[73:]])
+      X_test[X_test.columns[73:]] = scaler.transform(X_test[X_test.columns[73:]])
 
       # Split the dataset into features and target
       X_train = pd.DataFrame(X_train)
@@ -99,6 +99,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
       mse = mean_squared_error(y_test, y_pred)
       mae = mean_absolute_error(y_test, y_pred)
       r2_score_v.append(r2_score(y_test, y_pred))
+      
       mae_v.append(mae)
       mse_v.append(mse)
       
@@ -246,7 +247,6 @@ def fraud_detection_st(model, df):
           X_train['Shipping Mode'] = le.fit_transform(X_train['Shipping Mode'])
           X_test['Shipping Mode'] = le.transform(X_test['Shipping Mode'])
 
-          
           # Delivery Status
           # Define the custom order
           custom_order = ['Shipping on time', 'Advance shipping', 'Late delivery', 'Shipping canceled']
@@ -386,8 +386,6 @@ def delay_detection_st(model, df):
       from sklearn.preprocessing import OneHotEncoder, LabelEncoder
       import matplotlib.pyplot as plt
       import seaborn as sns
-      
-      
 
       # Standardize the data and split it into training and test sets
       recall_scores = []
@@ -417,7 +415,7 @@ def delay_detection_st(model, df):
             X_test = enc.transform(X_test)
 
             # Select columns for one-hot encoding
-            one_hot_cols = [0, 4, 6, 7, 10, 18]
+            one_hot_cols = [0, 3, 5, 6, 9]
             one_hot_encoder = OneHotEncoder(handle_unknown="ignore")
             X_train_one_hot = one_hot_encoder.fit_transform(X_train.iloc[:, one_hot_cols])
             X_test_one_hot = one_hot_encoder.transform(X_test.iloc[:, one_hot_cols])
@@ -439,8 +437,8 @@ def delay_detection_st(model, df):
 
             scaler = StandardScaler()
 
-            X_train[X_train.columns[82:]] = scaler.fit_transform(X_train[X_train.columns[82:]])
-            X_test[X_test.columns[82:]] = scaler.transform(X_test[X_test.columns[82:]])
+            X_train[X_train.columns[73:]] = scaler.fit_transform(X_train[X_train.columns[73:]])
+            X_test[X_test.columns[73:]] = scaler.transform(X_test[X_test.columns[73:]])
 
             X_train = pd.DataFrame(X_train)
             X_test = pd.DataFrame(X_test)
