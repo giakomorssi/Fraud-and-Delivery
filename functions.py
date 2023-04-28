@@ -1,4 +1,4 @@
-def prediction_pkl_st(model, df, threshold = 0.01):
+def prediction_pkl_st(model, df, threshold = 0.1):
   import streamlit as st
   from sklearn.metrics import mean_squared_error
   import pandas as pd
@@ -26,7 +26,7 @@ def prediction_pkl_st(model, df, threshold = 0.01):
     st.subheader('\nModel:\n')
     st.write("**StackingRegressor(estimators=[('brr', BayesianRidge()), ('ridge', Ridge())], final_estimator=DecisionTreeRegressor())**")
    
-  st.write(f'The Within Threshold is: {threshold} that corresponds to {(24*threshold)*10} hours.')
+  st.write(f'The Within Threshold is: {threshold} that corresponds to {(24*threshold)} hours.')
 
   with st.spinner('Running prediction...'):
     progress_bar = st.progress(0)
