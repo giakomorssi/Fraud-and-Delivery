@@ -142,7 +142,7 @@ def prediction_pkl_st(model, df, threshold = 0.1):
           avg_pred = np.mean(mse_dict[label]['preds'])
           table_data.append([f'{label} Days, instances, f'{rmse:.4f}', f'{avg_pred:.4f}'])
       else:
-          table_data.append([label, 'no instances', 'N/A', 'N/A'])
+          table_data.append([f'{label} Day', 'no instances', 'N/A', 'N/A'])
 
   st.table(pd.DataFrame(table_data, columns=table_header))
 
