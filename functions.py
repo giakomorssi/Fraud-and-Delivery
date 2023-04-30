@@ -214,6 +214,7 @@ def fraud_detection_st(model, df):
       import numpy as np
       from category_encoders import LeaveOneOutEncoder
       from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+      import graphviz
 
       df.drop(['Order Status'], axis=1, inplace=True)
       
@@ -229,14 +230,15 @@ def fraud_detection_st(model, df):
       avg_conf_matrix = np.zeros((3, 3))
       with st.spinner('Wait for it...'):
         st.subheader('\nModel:\n')
-        st.write(model)
-        st.write("VotingClassifier(estimators=[('rf',
-                              RandomForestClassifier(class_weight='balanced',
-                                                     max_depth=4)),
-                             ('lr',
-                              LogisticRegression(class_weight='balanced',
-                                                 max_iter=1000))],
-                 voting='soft')")
+        dot_data = export_graphviz(voting_clf.estimators_[0], out_file=None, 
+                                   feature_names=X.columns,  
+                                   class_names=y.unique(),  
+                                   filled=True, rounded=True,  
+                                   special_characters=True)
+        graph = graphviz.Source(dot_data)
+
+        # Display the visualization in Streamlit
+        st.graphviz_chart(graph)
 
       with st.spinner('Running prediction...'):
         progress_bar = st.progress(0)
