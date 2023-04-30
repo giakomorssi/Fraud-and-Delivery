@@ -221,9 +221,11 @@ def fraud_detection_st(model, df):
       recall_scores = []
       precision_scores = []
       fraud_recall = []
+      fraud_precision = []
       suspected_recall = []
+      suspected_precision = []
       regular_recall = [] 
-      low = []
+      regular_precision = []
       avg_conf_matrix = np.zeros((3, 3))
       with st.spinner('Wait for it...'):
         st.subheader('\nModel:\n')
@@ -337,8 +339,11 @@ def fraud_detection_st(model, df):
           fraud_recall.append(recall_score(y_test, y_pred, average=None)[0])
           regular_recall.append(recall_score(y_test, y_pred, average=None)[1])
           suspected_recall.append(recall_score(y_test, y_pred, average=None)[2])
-          precision_scores.append(precision_score(y_test, y_pred, average=None))
-
+          precision_scores.append(precision_score(y_test, y_pred, average='macro'))
+          fraud_precision.append(precision_score(y_test, y_pred, average=None)[0])
+          regular_precision.append(precision_score(y_test, y_pred, average=None)[1])
+          suspected_precision.append(precision_score(y_test, y_pred, average=None)[2])
+          
           conf_matrix = confusion_matrix(y_test, y_pred)
           avg_conf_matrix += conf_matrix
 
@@ -352,11 +357,16 @@ def fraud_detection_st(model, df):
       ]
       st.table(pd.DataFrame(table_data, columns=table_header))
 
-      st.subheader('Precision Performance')
+      st.subheader('Recall Performance')
 
-      table_header = ['Precision', 'Average', 'Std']
-      table_data = [['Total', f'{np.average(precision_scores):.4f}', f'{np.std(precision_scores):.4f}']]
+      table_header = ['Recall Type', 'Average', 'Std']
+      table_data = [    ['Fraud', f'{np.average(fraud_precision):.4f}', f'{np.std(fraud_precision):.4f}'],
+          ['Suspected', f'{np.average(suspected_precision):.4f}', f'{np.std(suspected_precision):.4f}'],
+          ['Regular', f'{np.average(regular_precision):.4f}', f'{np.std(regular_precision):.4f}'],
+          ['Total', f'{np.average(precision_scores):.4f}', f'{np.std(precision_scores):.4f}']
+      ]
       st.table(pd.DataFrame(table_data, columns=table_header))
+
 
       st.subheader('Confusion Matrix')
 
