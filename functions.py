@@ -357,7 +357,7 @@ def fraud_detection_st(model, df):
       ]
       st.table(pd.DataFrame(table_data, columns=table_header))
 
-      st.subheader('Recall Performance')
+      st.subheader('Precision Performance')
 
       table_header = ['Recall Type', 'Average', 'Std']
       table_data = [    ['Fraud', f'{np.average(fraud_precision):.4f}', f'{np.std(fraud_precision):.4f}'],
