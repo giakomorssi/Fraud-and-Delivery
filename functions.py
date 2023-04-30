@@ -26,7 +26,7 @@ def prediction_pkl_st(model, df, threshold = 0.1):
     st.subheader('\nModel:\n')
     st.write("**StackingRegressor(estimators=[('brr', BayesianRidge()), ('ridge', Ridge())], final_estimator=DecisionTreeRegressor())**")
    
-  st.write(f'The Within Threshold is: {threshold} that corresponds to {(24*threshold)} hours.')
+  st.write(f'The Within Threshold is: {threshold} that corresponds to {np.round(24*threshold, 2)} hours.')
 
   with st.spinner('Running prediction...'):
     progress_bar = st.progress(0)
