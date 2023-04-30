@@ -215,6 +215,7 @@ def fraud_detection_st(model, df):
       from category_encoders import LeaveOneOutEncoder
       from sklearn.preprocessing import OneHotEncoder, LabelEncoder
       import graphviz
+      from sklearn.tree import export_graphviz
 
       df.drop(['Order Status'], axis=1, inplace=True)
       
@@ -230,15 +231,7 @@ def fraud_detection_st(model, df):
       avg_conf_matrix = np.zeros((3, 3))
       with st.spinner('Wait for it...'):
         st.subheader('\nModel:\n')
-        dot_data = export_graphviz(voting_clf.estimators_[0], out_file=None, 
-                                   feature_names=X.columns,  
-                                   class_names=y.unique(),  
-                                   filled=True, rounded=True,  
-                                   special_characters=True)
-        graph = graphviz.Source(dot_data)
-
-        # Display the visualization in Streamlit
-        st.graphviz_chart(graph)
+        st.write(repr(model))
 
       with st.spinner('Running prediction...'):
         progress_bar = st.progress(0)
