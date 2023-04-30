@@ -229,6 +229,14 @@ def fraud_detection_st(model, df):
       avg_conf_matrix = np.zeros((3, 3))
       with st.spinner('Wait for it...'):
         st.subheader('\nModel:\n')
+        st.write(model)
+        st.write('VotingClassifier(estimators=[('rf',
+                              RandomForestClassifier(class_weight='balanced',
+                                                     max_depth=4)),
+                             ('lr',
+                              LogisticRegression(class_weight='balanced',
+                                                 max_iter=1000))],
+                 voting='soft')')
 
       with st.spinner('Running prediction...'):
         progress_bar = st.progress(0)
