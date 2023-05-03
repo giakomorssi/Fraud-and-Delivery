@@ -24,7 +24,7 @@ def prediction_pkl_st(model, df, threshold = 0.1):
 
   with st.spinner('Wait for it...'):
     st.subheader('\nModel:\n')
-    st.write("**StackingRegressor(estimators=[('brr', BayesianRidge()), ('ridge', Ridge())], final_estimator=DecisionTreeRegressor())**")
+    st.write("****")
    
   st.write(f'The Within Threshold is: {threshold} that corresponds to {np.round(24*threshold, 2)} hours.')
 
@@ -216,8 +216,6 @@ def fraud_detection_st(model, df):
       from sklearn.preprocessing import OneHotEncoder, LabelEncoder
       import graphviz
       from sklearn.tree import export_graphviz
-
-      df.drop(['Order Status'], axis=1, inplace=True)
       
       # Standardize the data and split it into training and test sets
       recall_scores = []
