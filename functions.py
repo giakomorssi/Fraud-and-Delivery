@@ -24,7 +24,7 @@ def prediction_pkl_st(model, df, threshold = 0.1):
 
   with st.spinner('Wait for it...'):
     st.subheader('\nModel:\n')
-    st.write("****")
+    st.write(model)
    
   st.write(f'The Within Threshold is: {threshold} that corresponds to {np.round(24*threshold, 2)} hours.')
 
@@ -229,7 +229,7 @@ def fraud_detection_st(model, df):
       avg_conf_matrix = np.zeros((3, 3))
       with st.spinner('Wait for it...'):
         st.subheader('\nModel:\n')
-        st.write(repr(model))
+        st.write(model)
 
       with st.spinner('Running prediction...'):
         progress_bar = st.progress(0)
