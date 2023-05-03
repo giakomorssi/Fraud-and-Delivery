@@ -21,10 +21,6 @@ def prediction_pkl_st(model, df, threshold = 0.1):
   mse_v = []
   mae_v = []
   r2_score_v = []
-
-  with st.spinner('Wait for it...'):
-    st.subheader('\nModel:\n')
-    st.write('BayesianRidge()')
     
   st.write(f'The Within Threshold is: {threshold} that corresponds to {np.round(24*threshold, 2)} hours.')
 
@@ -227,9 +223,6 @@ def fraud_detection_st(model, df):
       regular_recall = [] 
       regular_precision = []
       avg_conf_matrix = np.zeros((3, 3))
-      with st.spinner('Wait for it...'):
-        st.subheader('\nModel:\n')
-        st.write(model)
 
       with st.spinner('Running prediction...'):
         progress_bar = st.progress(0)
@@ -407,9 +400,6 @@ def delay_detection_st(model, df):
       accuracy_scores = []
       f1_scores = []
       avg_conf_matrix = np.zeros((2, 2))
-
-      st.subheader('\nModel:\n')
-      st.write(model)
 
       with st.spinner('Running prediction...'):
           progress_bar = st.progress(0)
