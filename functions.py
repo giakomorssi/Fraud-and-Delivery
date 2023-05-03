@@ -165,7 +165,7 @@ def prediction_pkl_st(model, df, threshold = 0.1):
   ax.set_xlabel('Residuals')
   ax.set_ylabel('Frequency')
   ax.set_title('Histogram of Residuals')
-  ax.set_xlim((-1.5, 1.5))
+  ax.set_xlim((-1, 1))
   sns.despine()
   st.pyplot(fig)
   st.write('\n')
