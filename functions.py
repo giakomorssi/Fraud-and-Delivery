@@ -24,7 +24,7 @@ def prediction_pkl_st(model, df, threshold = 0.1):
 
   with st.spinner('Wait for it...'):
     st.subheader('\nModel:\n')
-    st.write(model)
+    st.write("VotingClassifier(estimators=[('xgb', XGBClassifier()), ('lr', LogisticRegression(class_weight='balanced', max_iter=1000))], voting='soft')")
    
   st.write(f'The Within Threshold is: {threshold} that corresponds to {np.round(24*threshold, 2)} hours.')
 
