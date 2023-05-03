@@ -330,6 +330,9 @@ def fraud_detection_st(model, df):
 
           X_train.columns = X_train.columns.astype(str)
           X_test.columns = X_test.columns.astype(str)
+          
+          X_train.columns = range(len(X_train.columns))
+          X_test.columns = range(len(X_test.columns))
 
           y_pred = model.predict(X_test)
 
