@@ -419,7 +419,7 @@ def delay_detection_st(model, df):
             X_test = enc.transform(X_test)
 
             # Select columns for one-hot encoding
-            one_hot_cols = [0, 3, 5, 6, 9]
+            one_hot_cols = [0, 4, 5, 8]
             one_hot_encoder = OneHotEncoder(handle_unknown="ignore")
             X_train_one_hot = one_hot_encoder.fit_transform(X_train.iloc[:, one_hot_cols])
             X_test_one_hot = one_hot_encoder.transform(X_test.iloc[:, one_hot_cols])
@@ -441,8 +441,8 @@ def delay_detection_st(model, df):
 
             scaler = StandardScaler()
 
-            X_train[X_train.columns[73:]] = scaler.fit_transform(X_train[X_train.columns[73:]])
-            X_test[X_test.columns[73:]] = scaler.transform(X_test[X_test.columns[73:]])
+            X_train[X_train.columns[23:]] = scaler.fit_transform(X_train[X_train.columns[23:]])
+            X_test[X_test.columns[23:]] = scaler.transform(X_test[X_test.columns[23:]])
 
             X_train = pd.DataFrame(X_train)
             X_test = pd.DataFrame(X_test)
