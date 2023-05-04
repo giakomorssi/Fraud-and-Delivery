@@ -27,7 +27,7 @@ def prediction_pkl_st(model, df, threshold = 0.1):
   with st.spinner('Running prediction...'):
     progress_bar = st.progress(0)
 
-    for i in range(1, 11):
+    for i in range(1, 6):
       df = df.sample(frac=1)
 
       X = df.drop(['Days for shipping (real)'], axis = 1)
@@ -88,7 +88,7 @@ def prediction_pkl_st(model, df, threshold = 0.1):
 
       y_pred = model.predict(X_test)
 
-      progress_bar.progress((i + 1) / 11)
+      progress_bar.progress((i + 1) / 6)
 
       # Calculate the percentage of predictions within the threshold value
       
@@ -226,7 +226,7 @@ def fraud_detection_st(model, df):
 
       with st.spinner('Running prediction...'):
         progress_bar = st.progress(0)
-        for i in range(1, (11)):
+        for i in range(1, 6):
           df = df.sample(frac=1)
 
           X = df.drop(['Category'], axis=1)
@@ -329,7 +329,7 @@ def fraud_detection_st(model, df):
 
           y_pred = model.predict(X_test)
 
-          progress_bar.progress((i + 1) / 11)
+          progress_bar.progress((i + 1) / 6)
           conf_matrix = confusion_matrix(y_test, y_pred)
 
           recall_scores.append(recall_score(y_test, y_pred, average='macro'))
@@ -370,7 +370,7 @@ def fraud_detection_st(model, df):
       # plot the confusion matrix using seaborn heatmap
       pd.options.display.float_format = '{:.1f}'.format
       fig, ax = plt.subplots(figsize=(8, 6))
-      avg_conf_matrix /= 10
+      avg_conf_matrix /= 5
       np.set_printoptions(precision=1, suppress=True)
       avg_conf_matrix = np.round(avg_conf_matrix).astype(int)
       sns.heatmap(avg_conf_matrix, annot=True, cmap='Blues', fmt='.1f', cbar=False)
@@ -403,7 +403,7 @@ def delay_detection_st(model, df):
 
       with st.spinner('Running prediction...'):
           progress_bar = st.progress(0)
-          for i in range(1, (10 + 1)):
+          for i in range(1, 6):
             df = df.sample(frac=1)
       
             X = df.drop('Delay', axis = 1)
@@ -452,7 +452,7 @@ def delay_detection_st(model, df):
             X_train.columns = X_train.columns.astype(str)
             X_test.columns = X_test.columns.astype(str)
 
-            progress_bar.progress((i + 1) / 11)
+            progress_bar.progress((i + 1) / 6)
             y_pred = model.predict(X_test)
             conf_matrix = confusion_matrix(y_test, y_pred)
 
@@ -480,7 +480,7 @@ def delay_detection_st(model, df):
 
       pd.options.display.float_format = '{:.1f}'.format
       fig, ax = plt.subplots(figsize=(8, 6))
-      avg_conf_matrix /= 10
+      avg_conf_matrix /= 5
       np.set_printoptions(precision=1, suppress=True)
       avg_conf_matrix = np.round(avg_conf_matrix).astype(int)
       sns.heatmap(avg_conf_matrix, annot=True, cmap='Blues', fmt='.1f', cbar=False)
